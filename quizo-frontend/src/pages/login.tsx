@@ -45,21 +45,10 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         description: 'Please check your username and password.',
       });
     }
-  
-    // if (username === DEMO_CREDENTIALS.username && password === DEMO_CREDENTIALS.password) {
-    //   onLogin({
-    //     username: DEMO_CREDENTIALS.username,
-    //     name: DEMO_CREDENTIALS.name,
-    //   });
-    // } else {
-    //   toast.error('Invalid credentials', {
-    //     description: 'Please use the demo credentials provided below the form.',
-    //   });
-    // }
   };
 
   return (
-    <div className="min-h-screen gradient-background flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 gradient-background">
       <Card className="w-full max-w-md animate-slide-in bg-white/90 backdrop-blur-sm">
         <CardHeader className="space-y-1 flex flex-col items-center">
           <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4 animate-float shadow-lg">

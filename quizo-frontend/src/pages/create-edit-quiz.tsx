@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,25 +13,26 @@ interface CreateEditQuizProps {
   onClose: () => void;
   user: User;
 }
+const BACKEND_URL = 'http://localhost:5000';
 
-export function CreateEditQuiz({ quizId, onClose}: CreateEditQuizProps) {
+export function CreateEditQuiz({ quizId, onClose }: CreateEditQuizProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const isEditing = quizId !== 'new';
 
   useEffect(() => {
     if (isEditing) {
-      // Mock fetch quiz data - replace with actual API call
-      const quiz = {
-        id: '1',
-        title: 'Introduction to React',
-        description: 'Basic concepts of React including components, props, and state.',
-        createdAt: '2024-03-20T10:00:00Z',
-      };
-      setTitle(quiz.title);
-      setDescription(quiz.description);
+      axios.get(`${BACKEND_URL}/quizzes/${quizId}`)
+        .then(response => {
+          const quiz = response.data;
+          setTitle(quiz.title);
+          setDescription(quiz.description);
+        })
+        .catch(error => {
+          toast.error('Error fetching quiz data', { description: error.message });
+        });
     }
-  }, [isEditing]);
+  }, [isEditing, quizId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,14 +44,32 @@ export function CreateEditQuiz({ quizId, onClose}: CreateEditQuizProps) {
       return;
     }
 
-    // Mock save quiz - replace with actual API call
-    toast.success(isEditing ? 'Quiz updated successfully!' : 'Quiz created successfully!');
-    onClose();
+    const quizData = { title, description };
+
+    if (isEditing) {
+      axios.put(`${BACKEND_URL}/quizzes/${quizId}`, quizData)
+        .then(() => {
+          toast.success('Quiz updated successfully!');
+          onClose();
+        })
+        .catch(error => {
+          toast.error('Error updating quiz', { description: error.message });
+        });
+    } else {
+      axios.post(`${BACKEND_URL}/quizzes`, { ...quizData, createdAt: new Date() })
+        .then(() => {
+          toast.success('Quiz created successfully!');
+          onClose();
+        })
+        .catch(error => {
+          toast.error('Error creating quiz', { description: error.message });
+        });
+    }
   };
 
   return (
-    <div className="min-h-screen gradient-background">
-      <header className="bg-white/90 backdrop-blur-sm shadow-lg">
+    <div className="min-h-screen flex flex-col gradient-background">
+      <header className="bg-white/90 backdrop-blur-sm shadow-lg w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-4">
             <Button 
@@ -74,7 +94,7 @@ export function CreateEditQuiz({ quizId, onClose}: CreateEditQuizProps) {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-grow max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <form onSubmit={handleSubmit} className="space-y-6 animate-slide-in" style={{ animationDelay: '0.2s' }}>
           <div className="space-y-2">
             <Label htmlFor="title">Quiz Title</Label>

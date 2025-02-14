@@ -21,9 +21,10 @@ model User {
 }
 
 model Quiz {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
   description String
-  teacher     User   @relation(fields: [teacherId], references: [id])
+  teacher     User     @relation(fields: [teacherId], references: [id])
   teacherId   Int
+  createdAt   DateTime @default(now())
 }

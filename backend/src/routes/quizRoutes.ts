@@ -4,10 +4,16 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
+// Middleware to get the logged-in teacher's ID
+const getTeacherId = (req: Request): number => {
+  // Replace this with real user handling logic
+  return 1;//since we are not using jwt 
+};
+
 // Create Quiz
 router.post("/", async (req: Request, res: any) => {
   const { title, description } = req.body;
-  const teacherId = "some-hardcoded-teacher-id"; // Replace with real user handling logic
+  const teacherId = getTeacherId(req);
 
   if (!title || !description) {
     return res.status(400).json({ error: "Title and description are required" });
@@ -17,15 +23,16 @@ router.post("/", async (req: Request, res: any) => {
   res.json(quiz);
 });
 
-// Get all quizzes
+// Get all quizzes created by the logged-in teacher
 router.get("/", async (req, res) => {
-  const quizzes = await prisma.quiz.findMany();
+  const teacherId = getTeacherId(req);
+  const quizzes = await prisma.quiz.findMany({ where: { teacherId } });
   res.json(quizzes);
 });
 
 // Get a single quiz
 router.get("/:id", async (req: Request, res: any) => {
-  const quiz = await prisma.quiz.findUnique({ where: { id: req.params.id } });
+  const quiz = await prisma.quiz.findUnique({ where: { id: Number(req.params.id) } });
   if (!quiz) return res.status(404).json({ error: "Quiz not found" });
   res.json(quiz);
 });
@@ -34,7 +41,7 @@ router.get("/:id", async (req: Request, res: any) => {
 router.put("/:id", async (req, res) => {
   const { title, description } = req.body;
   const quiz = await prisma.quiz.update({
-    where: { id: req.params.id },
+    where: { id: Number(req.params.id) },
     data: { title, description },
   });
   res.json(quiz);
@@ -42,7 +49,7 @@ router.put("/:id", async (req, res) => {
 
 // Delete a quiz
 router.delete("/:id", async (req, res) => {
-  await prisma.quiz.delete({ where: { id: req.params.id } });
+  await prisma.quiz.delete({ where: { id: Number(req.params.id) } });
   res.json({ message: "Quiz deleted" });
 });
 
