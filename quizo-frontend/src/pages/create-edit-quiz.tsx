@@ -13,7 +13,8 @@ interface CreateEditQuizProps {
   onClose: () => void;
   user: User;
 }
-const BACKEND_URL = 'http://localhost:5000';
+require('dotenv').config();
+const BACKEND_URL = process.env.BACKEND_URL;
 
 export function CreateEditQuiz({ quizId, onClose }: CreateEditQuizProps) {
   const [title, setTitle] = useState('');

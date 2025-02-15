@@ -11,8 +11,9 @@ import {
 import { Plus, MoreVertical, PencilIcon, Trash2Icon, LogOut } from 'lucide-react';
 import { User, Quiz } from '@/types';
 import { format, isValid, parseISO } from 'date-fns';
+require('dotenv').config();
+const BACKEND_URL = process.env.BACKEND_URL;
 
-const BACKEND_URL = 'http://localhost:5000';
 interface DashboardProps {
   user: User;
   onLogout: () => void;

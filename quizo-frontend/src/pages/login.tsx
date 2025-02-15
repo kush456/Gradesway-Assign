@@ -8,7 +8,10 @@ import { toast } from 'sonner';
 import { User } from '@/types';
 import axios from 'axios';
 
-const BACKEND_URL = 'http://localhost:5000'; 
+require('dotenv').config();
+const BACKEND_URL = process.env.BACKEND_URL;
+
+
 
 const DEMO_CREDENTIALS = {
   username: 'teacher',
