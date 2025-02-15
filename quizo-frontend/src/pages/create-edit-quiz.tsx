@@ -7,14 +7,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft } from 'lucide-react';
 import { User } from '@/types';
 import { toast } from 'sonner';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+console.log(BACKEND_URL)
+
 
 interface CreateEditQuizProps {
   quizId: string;
   onClose: () => void;
   user: User;
 }
-require('dotenv').config();
-const BACKEND_URL = process.env.BACKEND_URL;
+
 
 export function CreateEditQuiz({ quizId, onClose }: CreateEditQuizProps) {
   const [title, setTitle] = useState('');

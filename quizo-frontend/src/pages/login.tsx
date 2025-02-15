@@ -8,9 +8,9 @@ import { toast } from 'sonner';
 import { User } from '@/types';
 import axios from 'axios';
 
-require('dotenv').config();
-const BACKEND_URL = process.env.BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+console.log(BACKEND_URL)
 
 
 const DEMO_CREDENTIALS = {
